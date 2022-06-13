@@ -1,14 +1,15 @@
 # parameters
-ARG REPO_NAME="<REPO_NAME_HERE>"
-ARG DESCRIPTION="<DESCRIPTION_HERE>"
-ARG MAINTAINER="<YOUR_FULL_NAME> (<YOUR_EMAIL_ADDRESS>)"
+ARG REPO_NAME="dt-machine-learning-base-pytorch"
+ARG DESCRIPTION="PyTorch base image"
+ARG MAINTAINER="Andrea F. Daniele (afdaniele@ttic.edu)"
 # pick an icon from: https://fontawesome.com/v4.7.0/icons/
 ARG ICON="cube"
 
 # ==================================================>
 # ==> Do not change the code below this line
 ARG ARCH=arm64v8
-ARG DISTRO=ente
+# TODO: fix ente base image and redirect this
+ARG DISTRO=daffy
 ARG BASE_TAG=${DISTRO}-${ARCH}
 ARG BASE_IMAGE=dt-machine-learning-base-environment
 ARG LAUNCHER=default
@@ -82,3 +83,8 @@ LABEL org.duckietown.label.module.type="${REPO_NAME}" \
     org.duckietown.label.maintainer="${MAINTAINER}"
 # <== Do not change the code above this line
 # <==================================================
+
+# install PyTorch
+ARG ARCH
+COPY assets/${ARCH} "${REPO_PATH}/install"
+RUN "${REPO_PATH}/install/install.sh"
