@@ -8,7 +8,7 @@ ARG ICON="cube"
 # ==================================================>
 # ==> Do not change the code below this line
 ARG ARCH=arm64v8
-# TODO: fix ente base image and redirect this
+# TODO: fix daffy base image and redirect this
 ARG DISTRO=daffy
 ARG BASE_TAG=${DISTRO}-${ARCH}
 ARG BASE_IMAGE=dt-machine-learning-base-environment
