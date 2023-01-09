@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-import math
 import multiprocessing
-import time
+
 import torch
 
 # Get the number of CPU threads
@@ -47,7 +46,7 @@ worker_gpu = multiprocessing.Process(target=spawn_gpu)
 workers.append()
 worker_gpu.start()
 
-for i in range(num_threads-1):
+for i in range(num_threads - 1):
     worker = multiprocessing.Process(target=prime_runner)
     workers.append(worker)
     worker.start()
