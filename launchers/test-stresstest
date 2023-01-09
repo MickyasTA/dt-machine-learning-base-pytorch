@@ -1,16 +1,26 @@
 #!/usr/bin/env python3
 import multiprocessing
+import time
 
+import psutil
 import torch
 
-# Get the number of CPU threads
-num_threads = multiprocessing.cpu_count()
+# This varaiable should be modified by launcher
+DESIRED_BENCH_DURATION = 30
+
+# This is a safety variable. Do not change!
+MAX_DURATION = 180  # Maximum allow to run 120 seconds (3 minutes)
 
 
 def spawn_gpu():
-    x = torch.linspace(0, 4, 16 * 1024 ** 2).cuda()
-    while True:
-        x = x * (1.0 - x)
+    end_time = time.time() + MAX_DURATION
+    print(f"GPU Thread Max Execution till: {end_time}")
+    try:
+        x = torch.linspace(0, 4, 16 * 1024 ** 2).cuda()
+        while time.time() < end_time:
+            x = x * (1.0 - x)
+    except KeyboardInterrupt:
+        print("External Shutdown Received!")
 
 
 def is_prime(n):
@@ -28,25 +38,45 @@ def find_next_prime(n):
     return n
 
 
-def prime_runner():
-    # Set up variables
-    n = 2
-    iterations = 0
-    # Loop until interrupted
-    while True:
-        # Increase n and increment iteration count
-        n = find_next_prime(n + 1)
-        iterations += 1
+# A function used for stress testing CPU per thread
+def prime_runner(thread_id):
+    end_time = time.time() + MAX_DURATION
+    print(f"CPU Thread {thread_id} Max Execution till: {end_time}")
+    try:
+        n = 2
+        iterations = 0
+        while time.time() < end_time:
+            n = find_next_prime(n + 1)
+            iterations += 1
+    except KeyboardInterrupt:
+        print("External Shutdown Received!")
 
+
+# Get the number of CPU threads
+num_threads = multiprocessing.cpu_count()
+print(f"Total stressing CPU counts: {num_threads}")
+total_memory = psutil.virtual_memory().total
+print(f"Total memory: {total_memory} bytes")
 
 # Set up a list of worker processes
 workers = []
 
 worker_gpu = multiprocessing.Process(target=spawn_gpu)
-workers.append()
+workers.append(worker_gpu)
+print(f"GPU Stress started")
 worker_gpu.start()
 
-for i in range(num_threads - 1):
-    worker = multiprocessing.Process(target=prime_runner)
+for threads in range(num_threads - 1):
+    worker = multiprocessing.Process(target=prime_runner, args=(threads,))
     workers.append(worker)
+    print(f"CPU Thread {threads} Stress started")
     worker.start()
+
+required_shutdown = time.time() + DESIRED_BENCH_DURATION
+while time.time() < required_shutdown:
+    time.sleep(1)
+
+for task in workers:
+    task.terminate()
+
+exit(0)
