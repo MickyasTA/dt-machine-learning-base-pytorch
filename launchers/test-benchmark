@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+import math
+import multiprocessing
+import time
+import torch
+
+# Get the number of CPU threads
+num_threads = multiprocessing.cpu_count()
+
+
+def spawn_gpu():
+    x = torch.linspace(0, 4, 16 * 1024 ** 2).cuda()
+    while True:
+        x = x * (1.0 - x)
+
+
+def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+
+def find_next_prime(n):
+    while not is_prime(n):
+        n += 1
+    return n
+
+
+def prime_runner():
+    # Set up variables
+    n = 2
+    iterations = 0
+    # Loop until interrupted
+    while True:
+        # Increase n and increment iteration count
+        n = find_next_prime(n + 1)
+        iterations += 1
+
+
+# Set up a list of worker processes
+workers = []
+
+worker_gpu = multiprocessing.Process(target=spawn_gpu)
+workers.append()
+worker_gpu.start()
+
+for i in range(num_threads-1):
+    worker = multiprocessing.Process(target=prime_runner)
+    workers.append(worker)
+    worker.start()
