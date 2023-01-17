@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
+import argparse
 import datetime
 import multiprocessing
 import time
 
 import torch
 
-# This varaiable should be modified by launcher
-DESIRED_BENCH_DURATION = 60
+# To run this script: dts --debug devel run -H db21bot --build -t daffy -M -s -f -L test-stresstest -A stress_time=30
 
 # This is a safety variable. Do not change!
 MAX_DURATION = 300  # Maximum allow to run 300 seconds (5 minutes)
@@ -93,10 +93,20 @@ def run():
 
 
 if __name__ == "__main__":
-    print(f"System starting stress test. Might be unresponsive!")
+    # This varaiable should be modified by launcher
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--stress_time", help="The total seconds you want to stress test your board.", default=30,
+                        type=int)
+    args = parser.parse_args()
+    DESIRED_BENCH_DURATION = args.stress_time
+
     print(f"Safety trigger set at: {MAX_DURATION} seconds!")
-    print(f"Benchmarking for: {DESIRED_BENCH_DURATION} seconds!")
+    if DESIRED_BENCH_DURATION > MAX_DURATION:
+        print(f"Request a stress test time larger than safety threshold! Will only run 300 seconds!")
+    else:
+        print(f"System starting stress test. Might be unresponsive!")
+        print(f"Benchmarking for: {DESIRED_BENCH_DURATION} seconds!")
     print("=====================================================")
-    time.sleep(2)
+    time.sleep(5)  # So that user will see the log above
     run()
     exit(0)
