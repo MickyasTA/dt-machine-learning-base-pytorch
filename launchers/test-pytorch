@@ -45,6 +45,7 @@ if device.type == 'cuda':
         print("ERROR! Pytorch sees GPU, but it cannot use it. Are you using a recent generation GPU?")
 else:
     print("Pytoch has GPU: False")
+
 print("===============================================================")
 print("If you have any issues, please send the output above this line!")
 exit()
