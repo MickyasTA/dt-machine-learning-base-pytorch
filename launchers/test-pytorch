@@ -46,12 +46,6 @@ if device.type == 'cuda':
 else:
     print("Pytoch has GPU: False")
 
-# #requires panda and seaborn
-# model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
-# imgs = ['https://ultralytics.com/images/zidane.jpg']  # batch of images
-# results = model(imgs)
-# results.print()
-
 print("===============================================================")
 print("If you have any issues, please send the output above this line!")
 exit()
