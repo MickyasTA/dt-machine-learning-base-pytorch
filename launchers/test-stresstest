@@ -6,7 +6,7 @@ import time
 
 import torch
 
-# To run this script: dts --debug devel run -H db21bot --build -t daffy -M -s -f -L test-stresstest -A stress_time=30
+# To run this script: dts --debug devel run -H ROBOT_NAME --build -t ente -M -s -f -L test-stresstest -A stress_time=30
 
 # This is a safety variable. Do not change!
 MAX_DURATION = 300  # Maximum allow to run 300 seconds (5 minutes)
