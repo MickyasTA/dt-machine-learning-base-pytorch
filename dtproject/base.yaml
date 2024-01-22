@@ -1,4 +1,4 @@
 #registry: docker.io
 #organization: duckietown
 #tag: <distro>-<arch>
-repository: dt-machine-learning-base-pytorch
+repository: dt-machine-learning-base-environment
